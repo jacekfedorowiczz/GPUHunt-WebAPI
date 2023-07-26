@@ -16,9 +16,9 @@ namespace GPUHunt.Domain.Entities
         public string? Description { get; set; }
         public string? Nationality { get; set; }
 
-        public virtual List<GraphicCard> FavoritesGraphicCards { get; set; }
+        public List<GraphicCard> FavoritesGraphicCards { get; set; }
 
+        public Role Role { get; set; }
         public int RoleId { get; set; }
-        public virtual Role Role { get; set; }
     }
 }

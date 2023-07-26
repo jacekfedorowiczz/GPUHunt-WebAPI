@@ -17,6 +17,6 @@ namespace GPUHunt.Domain.Interfaces
         Task Delete(int id);
         Task<bool> isDatabaseEmpty();
 
-        Task AddToFavorites(int id);
+        Task AddToFavorites(int id, int userId);
     }
 }

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GPUHunt.Domain\GPUHunt.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
