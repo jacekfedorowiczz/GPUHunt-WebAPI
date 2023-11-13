@@ -16,12 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GPUHunt.Application\GPUHunt.Application.csproj" />
     <ProjectReference Include="..\GPUHunt.Infrastructure\GPUHunt.Infrastructure.csproj" />
+    <ProjectReference Include="..\GPUHunt.Localization\GPUHunt.Localization.csproj" />
+    <ProjectReference Include="..\GPUHunt.Models\GPUHunt.Models.csproj" />
   </ItemGroup>
 
 </Project>

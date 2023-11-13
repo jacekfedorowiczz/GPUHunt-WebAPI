@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GPUHunt.Domain.Entities
+﻿namespace GPUHunt.Domain.Entities
 {
     public class Prices
     {
@@ -22,10 +16,9 @@ namespace GPUHunt.Domain.Entities
         public decimal? HighestPrice { get; set; }
         public Store? HighestPriceStore { get; set; }
 
-
         public decimal MoreleLowestPriceEver { get; set; }
         public DateTime MoreleLowestPriceEverCrawlDate { get; set; }
-        public decimal LowestPriceEverXkom { get; set; }
+        public decimal XkomLowestPriceEver { get; set; }
         public DateTime XkomLowestPriceEverCrawlDate { get; set; }
 
         public decimal? MoreleHighestPriceEver { get; set; }

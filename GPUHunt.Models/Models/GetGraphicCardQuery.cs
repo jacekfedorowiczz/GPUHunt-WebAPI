@@ -1,13 +1,8 @@
 ﻿using GPUHunt.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GPUHunt.Models.Models
 {
-    public class GetGraphicCardsQuery
+    public class GetGraphicCardQuery
     {
         public int PageSize { get; set; }
         public int PageNumber { get; set; }

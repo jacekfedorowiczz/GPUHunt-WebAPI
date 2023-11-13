@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GPUHunt.Models.DTOs.Acccount
+﻿namespace GPUHunt.Models.DTOs.Acccount
 {
     public class LoginAccountDto
     {

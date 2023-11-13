@@ -3,12 +3,8 @@ using GPUHunt.Application.Models;
 using GPUHunt.Domain.Enums;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GPUHunt.Application.Services.StoreCrawlers
 {
@@ -31,12 +27,12 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             _cardSetter = cardSetter;
         }
 
-        public async Task<IEnumerable<StoreGPU>> CrawlStore()
+        public IEnumerable<StoreGPU> CrawlStore()
         {
             try
             {
-                var sites = await GetSites();
-                var GPUs = await GetGPUs(sites);
+                var sites = GetSites();
+                var GPUs = GetGPUs(sites);
                 return GPUs;
             }
             catch (ArgumentNullException)
@@ -45,7 +41,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             }
         }
 
-        private async Task<IEnumerable<string>> GetSites()
+        private IEnumerable<string> GetSites()
         {
             var document = Web.Load(MoreleBaseURL);
             var urls = new List<string>() { MoreleBaseURL };
@@ -70,7 +66,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             return urls;
         }
 
-        private async Task<IEnumerable<StoreGPU>> GetGPUs(IEnumerable<string> sites)
+        private IEnumerable<StoreGPU> GetGPUs(IEnumerable<string> sites)
         {
             var gpusList = new List<StoreGPU>();
 
@@ -81,7 +77,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
 
                 foreach (var gpu in gpus)
                 {
-                    var entity = await GetGPUDetails(gpu);
+                    var entity = GetGPUDetails(gpu);
                     if (entity != null)
                     {
                         gpusList.Add(entity);
@@ -91,7 +87,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             return gpusList;
         }
 
-        private async Task<StoreGPU> GetGPUDetails(HtmlNode gpu)
+        private StoreGPU GetGPUDetails(HtmlNode gpu)
         {
             StringBuilder sb = new();
 

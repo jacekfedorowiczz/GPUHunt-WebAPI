@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GPUHunt.Models.DTOs.GraphicCard
+﻿namespace GPUHunt.Models.DTOs.GraphicCard
 {
     public class GraphicCardDto
     {
@@ -12,7 +6,7 @@ namespace GPUHunt.Models.DTOs.GraphicCard
         public string Vendor { get; set; }
         public string Subvendor { get; set; }
 
-        // informacje o cenach dotychczasowych w obu sklepach
+        // Information about current prices in stores
         public decimal? ActualMorelePrice { get; set; }
         public decimal? ActualXkomPrice { get; set; }
         public DateTime LastCrawlDate { get; set; }

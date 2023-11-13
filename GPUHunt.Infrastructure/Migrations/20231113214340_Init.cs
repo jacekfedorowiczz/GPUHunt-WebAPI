@@ -39,7 +39,7 @@ namespace GPUHunt.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subvendor",
+                name: "Subvendors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -48,7 +48,7 @@ namespace GPUHunt.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subvendor", x => x.Id);
+                    table.PrimaryKey("PK_Subvendors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,9 +73,6 @@ namespace GPUHunt.Infrastructure.Migrations
                     Alias = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Nationality = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -110,9 +107,9 @@ namespace GPUHunt.Infrastructure.Migrations
                         principalTable: "Accounts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_GraphicCards_Subvendor_SubvendorId",
+                        name: "FK_GraphicCards_Subvendors_SubvendorId",
                         column: x => x.SubvendorId,
-                        principalTable: "Subvendor",
+                        principalTable: "Subvendors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -140,7 +137,7 @@ namespace GPUHunt.Infrastructure.Migrations
                     HighestPriceStoreId = table.Column<int>(type: "int", nullable: true),
                     MoreleLowestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
                     MoreleLowestPriceEverCrawlDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LowestPriceEverXkom = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
+                    XkomLowestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
                     XkomLowestPriceEverCrawlDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MoreleHighestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: true),
                     MoreleHighestPriceEverCrawlDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -222,7 +219,7 @@ namespace GPUHunt.Infrastructure.Migrations
                 name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "Subvendor");
+                name: "Subvendors");
 
             migrationBuilder.DropTable(
                 name: "Vendors");

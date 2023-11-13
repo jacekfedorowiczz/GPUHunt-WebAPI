@@ -34,17 +34,8 @@ namespace GPUHunt.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nationality")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -125,10 +116,6 @@ namespace GPUHunt.Infrastructure.Migrations
                         .HasPrecision(7, 2)
                         .HasColumnType("decimal(7,2)");
 
-                    b.Property<decimal>("LowestPriceEverXkom")
-                        .HasPrecision(7, 2)
-                        .HasColumnType("decimal(7,2)");
-
                     b.Property<int>("LowestPriceStoreId")
                         .HasColumnType("int");
 
@@ -141,7 +128,6 @@ namespace GPUHunt.Infrastructure.Migrations
                         .HasColumnType("decimal(7,2)");
 
                     b.Property<DateTime?>("MoreleHighestPriceEverCrawlDate")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("MoreleLowestPriceEver")
@@ -149,7 +135,6 @@ namespace GPUHunt.Infrastructure.Migrations
                         .HasColumnType("decimal(7,2)");
 
                     b.Property<DateTime>("MoreleLowestPriceEverCrawlDate")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("XKomActualPrice")
@@ -161,11 +146,13 @@ namespace GPUHunt.Infrastructure.Migrations
                         .HasColumnType("decimal(7,2)");
 
                     b.Property<DateTime?>("XkomHighestPriceEverCrawlDate")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("XkomLowestPriceEver")
+                        .HasPrecision(7, 2)
+                        .HasColumnType("decimal(7,2)");
+
                     b.Property<DateTime>("XkomLowestPriceEverCrawlDate")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -232,7 +219,7 @@ namespace GPUHunt.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subvendor");
+                    b.ToTable("Subvendors");
                 });
 
             modelBuilder.Entity("GPUHunt.Domain.Entities.Vendor", b =>
@@ -270,7 +257,7 @@ namespace GPUHunt.Infrastructure.Migrations
                         .HasForeignKey("AccountId");
 
                     b.HasOne("GPUHunt.Domain.Entities.Subvendor", "Subvendor")
-                        .WithMany("GraphicCards")
+                        .WithMany()
                         .HasForeignKey("SubvendorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -320,11 +307,6 @@ namespace GPUHunt.Infrastructure.Migrations
                 {
                     b.Navigation("Prices")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("GPUHunt.Domain.Entities.Subvendor", b =>
-                {
-                    b.Navigation("GraphicCards");
                 });
 
             modelBuilder.Entity("GPUHunt.Domain.Entities.Vendor", b =>

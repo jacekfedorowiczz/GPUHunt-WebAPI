@@ -1,10 +1,5 @@
 ﻿using GPUHunt.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GPUHunt.Infrastructure.Seeders
 {
@@ -21,11 +16,11 @@ namespace GPUHunt.Infrastructure.Seeders
         /// Seed the database with initial data
         /// </summary>
         /// <returns></returns>
-        public async Task SeedDatabase()
+        public void SeedDatabase()
         {
-            if (await _dbContext.Database.CanConnectAsync())
+            if (_dbContext.Database.CanConnect())
             {
-                var pendingMigrations = await _dbContext.Database.GetPendingMigrationsAsync();
+                var pendingMigrations = _dbContext.Database.GetPendingMigrations();
                 if (pendingMigrations != null && pendingMigrations.Any())
                 {
                     _dbContext.Database.Migrate();
@@ -34,14 +29,14 @@ namespace GPUHunt.Infrastructure.Seeders
                 if (!_dbContext.Stores.Any())
                 {
                     var stores = GetStores();
-                    await _dbContext.Vendors.AddRangeAsync(stores);
-                    await _dbContext.SaveChangesAsync();
+                    _dbContext.Stores.AddRange(stores);
+                    _dbContext.SaveChanges();
                 }
                 if (!_dbContext.Roles.Any())
                 {
                     var roles = GetRoles();
-                    await _dbContext.Roles.AddRangeAsync(roles);
-                    await _dbContext.SaveChangesAsync();
+                    _dbContext.Roles.AddRange(roles);
+                    _dbContext.SaveChanges();
                 }
             }
         }
@@ -50,9 +45,9 @@ namespace GPUHunt.Infrastructure.Seeders
         /// Returns collection of initial roles for accounts
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<GPUHunt.Domain.Entities.Role> GetRoles()
+        private IEnumerable<Domain.Entities.Role> GetRoles()
         {
-            var roles = new List<GPUHunt.Domain.Entities.Role>()
+            var roles = new List<Domain.Entities.Role>()
             {
                 new Domain.Entities.Role()
                 {
@@ -62,8 +57,13 @@ namespace GPUHunt.Infrastructure.Seeders
                 new Domain.Entities.Role()
                 {
                     Name = "Admin",
-                    Description = "Administrator of Web API"
+                    Description = "Administrator"
                 },
+                new Domain.Entities.Role()
+                {
+                    Name = "Moderator",
+                    Description = "Moderator"
+                }
             };
 
             return roles;
@@ -73,15 +73,15 @@ namespace GPUHunt.Infrastructure.Seeders
         /// Returns initial collection of stores 
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<GPUHunt.Domain.Entities.Vendor> GetStores()
+        private IEnumerable<Domain.Entities.Store> GetStores()
         {
-            var vendors = new List<GPUHunt.Domain.Entities.Vendor>()
+            var vendors = new List<Domain.Entities.Store>()
             {
-                new Domain.Entities.Vendor()
+                new Domain.Entities.Store()
                 {
                     Name = "Morele"
                 },
-                new Domain.Entities.Vendor()
+                new Domain.Entities.Store()
                 {
                     Name = "X-Kom"
                 },
@@ -89,7 +89,5 @@ namespace GPUHunt.Infrastructure.Seeders
 
             return vendors;
         }
-
-
     }
 }

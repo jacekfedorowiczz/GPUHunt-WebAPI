@@ -3,12 +3,6 @@ using GPUHunt.Domain.Exceptions;
 using GPUHunt.Domain.Interfaces;
 using GPUHunt.Infrastructure.Persistance;
 using GPUHunt.Models.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GPUHunt.Infrastructure.Repositories
 {
@@ -21,10 +15,16 @@ namespace GPUHunt.Infrastructure.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task AddToFavorites(int id, int userId)
+        public void Update(IEnumerable<GraphicCard> graphicCards)
         {
-            var account = await _dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == userId);
-            var gpu = await _dbContext.GraphicCards.FirstOrDefaultAsync(g => g.Id == id);
+            _dbContext.UpdateRange(graphicCards);
+            _dbContext.SaveChanges();
+        }
+
+        public void AddToFavorites(int id, int userId)
+        {
+            var account = _dbContext.Accounts.FirstOrDefault(a => a.Id == userId);
+            var gpu =  _dbContext.GraphicCards.FirstOrDefault(g => g.Id == id);
 
             if (account == null)
             {
@@ -40,15 +40,15 @@ namespace GPUHunt.Infrastructure.Repositories
             return;
         }
 
-        public async Task Crawl(IEnumerable<GraphicCard> graphicCards)
+        public void Crawl(IEnumerable<GraphicCard> graphicCards)
         {
-            await _dbContext.GraphicCards.AddRangeAsync(graphicCards);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.GraphicCards.AddRange(graphicCards);
+            _dbContext.SaveChanges();
         }
 
-        public async Task Delete(int id)
+        public void Delete(int id)
         {
-            var gpu = await _dbContext.GraphicCards.FirstOrDefaultAsync(g => g.Id == id);
+            var gpu = _dbContext.GraphicCards.FirstOrDefault(g => g.Id == id);
 
             if (gpu == null)
             {
@@ -56,26 +56,19 @@ namespace GPUHunt.Infrastructure.Repositories
             }
 
             _dbContext.GraphicCards.Remove(gpu);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
-        public async Task<IEnumerable<GraphicCard>> GetAllGraphicCards() => await _dbContext.GraphicCards.ToListAsync();
+        public IEnumerable<GraphicCard> GetAllGraphicCards() => _dbContext.GraphicCards.ToList();
 
-        public Task<PagedResult<GraphicCard>> GetGraphicCards(GetGraphicCardsQuery query)
+        public PagedResult<GraphicCard> GetGraphicCards(GetGraphicCardQuery query)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> isDatabaseEmpty()
+        public bool isDatabaseNotEmpty()
         {
-            return await _dbContext.Database.CanConnectAsync() 
-                ? _dbContext.GraphicCards.Any() 
-                : throw new BadRequestException("Something went wrong.");
-        }
-
-        public Task Update(GraphicCard graphicCard)
-        {
-            throw new NotImplementedException();
+            return _dbContext.GraphicCards.Any();
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace GPUHunt.Models.DTOs.Acccount
 {
@@ -13,6 +9,7 @@ namespace GPUHunt.Models.DTOs.Acccount
         public string ConfirmPassword { get; set; }
         public string Alias { get; set; }
 
-        public int RoleId { get; set; } = 1;
+        [DefaultValue(1)]
+        public int RoleId { get; set; }
     }
 }

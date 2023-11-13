@@ -1,14 +1,10 @@
-﻿using GPUHunt.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GPUHunt.Application.Models;
+using GPUHunt.Models.Enums;
 
 namespace GPUHunt.Application.Interfaces
 {
     public interface ICardValidator
     {
-        Task<IEnumerable<GraphicCard>> ValidateGPUs();
+        ValidationModel ValidateGPU(IEnumerable<Domain.Entities.GraphicCard> comparedCards, ActionType actionType);
     }
 }

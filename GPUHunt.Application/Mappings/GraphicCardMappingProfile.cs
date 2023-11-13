@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using GPUHunt.Models.DTOs.GraphicCard;
 
 namespace GPUHunt.Application.Mappings
 {
-    public class GraphicCardMappingProfile
+    public class GraphicCardMappingProfile : Profile
     {
+        public GraphicCardMappingProfile()
+        {
+            CreateMap<Domain.Entities.GraphicCard, GraphicCardDto>()
+                .ReverseMap();
+        }
     }
 }
