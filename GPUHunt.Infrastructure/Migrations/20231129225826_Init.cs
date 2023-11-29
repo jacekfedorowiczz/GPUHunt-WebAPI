@@ -95,7 +95,6 @@ namespace GPUHunt.Infrastructure.Migrations
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VendorId = table.Column<int>(type: "int", nullable: false),
                     SubvendorId = table.Column<int>(type: "int", nullable: false),
-                    PricesId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -130,15 +129,11 @@ namespace GPUHunt.Infrastructure.Migrations
                     MoreleActualPrice = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: true),
                     XKomActualPrice = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: true),
                     IsPriceEqual = table.Column<bool>(type: "bit", nullable: false),
-                    CrawlTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LowestPrice = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
-                    LowestPriceStoreId = table.Column<int>(type: "int", nullable: false),
-                    HighestPrice = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: true),
-                    HighestPriceStoreId = table.Column<int>(type: "int", nullable: true),
-                    MoreleLowestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
-                    MoreleLowestPriceEverCrawlDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    XkomLowestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
-                    XkomLowestPriceEverCrawlDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CrawlTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MoreleLowestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: true),
+                    MoreleLowestPriceEverCrawlDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    XkomLowestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: true),
+                    XkomLowestPriceEverCrawlDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     MoreleHighestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: true),
                     MoreleHighestPriceEverCrawlDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     XkomHighestPriceEver = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: true),
@@ -151,17 +146,6 @@ namespace GPUHunt.Infrastructure.Migrations
                         name: "FK_Prices_GraphicCards_GraphicCardId",
                         column: x => x.GraphicCardId,
                         principalTable: "GraphicCards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prices_Stores_HighestPriceStoreId",
-                        column: x => x.HighestPriceStoreId,
-                        principalTable: "Stores",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Prices_Stores_LowestPriceStoreId",
-                        column: x => x.LowestPriceStoreId,
-                        principalTable: "Stores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -191,16 +175,6 @@ namespace GPUHunt.Infrastructure.Migrations
                 table: "Prices",
                 column: "GraphicCardId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prices_HighestPriceStoreId",
-                table: "Prices",
-                column: "HighestPriceStoreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prices_LowestPriceStoreId",
-                table: "Prices",
-                column: "LowestPriceStoreId");
         }
 
         /// <inheritdoc />
@@ -210,10 +184,10 @@ namespace GPUHunt.Infrastructure.Migrations
                 name: "Prices");
 
             migrationBuilder.DropTable(
-                name: "GraphicCards");
+                name: "Stores");
 
             migrationBuilder.DropTable(
-                name: "Stores");
+                name: "GraphicCards");
 
             migrationBuilder.DropTable(
                 name: "Accounts");

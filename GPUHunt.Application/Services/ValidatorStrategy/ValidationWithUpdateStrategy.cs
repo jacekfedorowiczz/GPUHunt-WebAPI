@@ -32,6 +32,7 @@ namespace GPUHunt.Application.Services.ValidatorStrategy
             return model;
 
         }
+
         private Domain.Entities.GraphicCard ValidateGPUsInfo(Domain.Entities.GraphicCard graphicCard, Domain.Entities.GraphicCard gpuFromDatabase)
         {
             if (graphicCard.Prices.MoreleActualPrice >= gpuFromDatabase.Prices.MoreleHighestPriceEver)

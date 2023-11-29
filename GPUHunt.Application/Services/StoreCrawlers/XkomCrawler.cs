@@ -12,11 +12,11 @@ namespace GPUHunt.Application.Services.StoreCrawlers
     {
         readonly HtmlWeb Web = new();
         readonly NumberFormatInfo nfi = new CultureInfo("pl-PL", false).NumberFormat;
-        private readonly String _gpuCardSelector = ".gyHdpL";
-        private readonly String _gpuNameSelector = "a > h3";
-        private readonly String _gpuPriceSelector = ".gAlJbD > span.guFePW";
-        private readonly String _nextSiteSelector = "a.kGuktN";
-        private readonly String _optionalGpuNameSelector = ".emYvVh > a > span > img";
+        private readonly string _gpuCardSelector = ".gyHdpL";
+        private readonly string _gpuNameSelector = "a > h3";
+        private readonly string _gpuPriceSelector = ".gAlJbD > span.guFePW";
+        private readonly string _nextSiteSelector = "a.epZxio";
+        private readonly string _optionalGpuNameSelector = ".emYvVh > a > span > img";
         private readonly ICardSetter _cardSetter;
 
         protected string XKomBaseURL { get; private set; } =
@@ -91,12 +91,15 @@ namespace GPUHunt.Application.Services.StoreCrawlers
         {
             StringBuilder sb = new();
             var gpuModel = gpu.QuerySelector(_gpuNameSelector).LastChild.InnerText.ToString();
-            if (String.IsNullOrEmpty(gpuModel))
+            if (string.IsNullOrEmpty(gpuModel))
             {
                 gpuModel = gpu.QuerySelector(_optionalGpuNameSelector).Attributes["alt"].Value.ToString();
             }
 
-            var gpuPrice = decimal.Parse(gpu.QuerySelector(_gpuPriceSelector).InnerText.ToString(nfi).Replace("zł", "").Replace("od", ""));
+            var gpuPrice = decimal.Parse(gpu.QuerySelector(_gpuPriceSelector).InnerText
+                                                                                .ToString(nfi)
+                                                                                .Replace("zł", "")
+                                                                                .Replace("od", ""));
 
             var gpuName = sb.Append(gpuModel).Insert(0, "Karta graficzna ").ToString();
 

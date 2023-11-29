@@ -3,6 +3,7 @@ using GPUHunt.Domain.Exceptions;
 using GPUHunt.Domain.Interfaces;
 using GPUHunt.Infrastructure.Persistance;
 using GPUHunt.Models.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GPUHunt.Infrastructure.Repositories
 {
@@ -14,35 +15,18 @@ namespace GPUHunt.Infrastructure.Repositories
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
-
-        public void Update(IEnumerable<GraphicCard> graphicCards)
-        {
-            _dbContext.UpdateRange(graphicCards);
-            _dbContext.SaveChanges();
-        }
-
-        public void AddToFavorites(int id, int userId)
-        {
-            var account = _dbContext.Accounts.FirstOrDefault(a => a.Id == userId);
-            var gpu =  _dbContext.GraphicCards.FirstOrDefault(g => g.Id == id);
-
-            if (account == null)
-            {
-                throw new NotFoundException("User not found.");
-            }
-
-            if (gpu == null)
-            {
-                throw new NotFoundException("Graphic card not found.");
-            }
-
-            account.FavoritesGraphicCards.Add(gpu);
-            return;
-        }
+        public IEnumerable<GraphicCard> GetAllGraphicCards() => _dbContext.GraphicCards.Include(gc => gc.Prices).ToList();
+        public bool isDatabaseNotEmpty() => _dbContext.GraphicCards.Any();
 
         public void Crawl(IEnumerable<GraphicCard> graphicCards)
         {
             _dbContext.GraphicCards.AddRange(graphicCards);
+            _dbContext.SaveChanges();
+        }
+
+        public void Update(IEnumerable<GraphicCard> graphicCards)
+        {
+            _dbContext.UpdateRange(graphicCards);
             _dbContext.SaveChanges();
         }
 
@@ -59,16 +43,12 @@ namespace GPUHunt.Infrastructure.Repositories
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<GraphicCard> GetAllGraphicCards() => _dbContext.GraphicCards.ToList();
 
         public PagedResult<GraphicCard> GetGraphicCards(GetGraphicCardQuery query)
         {
+            // TODO: Zwracanie kart w paginacji
             throw new NotImplementedException();
         }
 
-        public bool isDatabaseNotEmpty()
-        {
-            return _dbContext.GraphicCards.Any();
-        }
     }
 }

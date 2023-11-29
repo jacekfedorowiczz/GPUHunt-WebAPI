@@ -14,7 +14,7 @@ namespace GPUHunt.Application.Services.CardUpdater
         }
 
         void ICardUpdater.UpdateGraphicCards(IEnumerable<Domain.Entities.GraphicCard> cardsToUpdate)
-        {
+        { 
             _repository.Update(cardsToUpdate);
         }
     }

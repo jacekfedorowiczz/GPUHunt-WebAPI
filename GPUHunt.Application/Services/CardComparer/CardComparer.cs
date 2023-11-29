@@ -56,26 +56,24 @@ namespace GPUHunt.Application.Services.CardComparer
             Domain.Entities.GraphicCard graphicCard = new()
             {
                 Model = gpu.Model,
-                Prices = new Prices()
+                Prices = new Prices() { CrawlTime = DateTime.UtcNow }
             };
 
-            graphicCard = ComparerHelper.SetVendorId(graphicCard, gpu);
+            graphicCard.VendorId = (int)gpu.Vendor;
 
             switch (gpu.Store)
             {
                 case "Morele":
+                    graphicCard.Prices.MoreleLowestPriceEverCrawlDate = DateTime.UtcNow;
                     graphicCard.Prices.MoreleActualPrice = gpu.Price;
-                    graphicCard.Prices.LowestPrice = gpu.Price;
-                    graphicCard.Prices.LowestPriceStore = new Store() { Name = gpu.Store};
                     break;
                 case "X-Kom":
+                    graphicCard.Prices.XkomLowestPriceEverCrawlDate = DateTime.UtcNow;
                     graphicCard.Prices.XKomActualPrice = gpu.Price;
-                    graphicCard.Prices.LowestPrice = gpu.Price;
-                    graphicCard.Prices.LowestPriceStore = new Store() { Name = gpu.Store };
                     break;
             }
 
-            graphicCard = ComparerHelper.SetSubvendor(graphicCard, gpu);
+            graphicCard.SubvendorId = (int)gpu.Subvendor;
 
             return graphicCard;
 
@@ -86,12 +84,12 @@ namespace GPUHunt.Application.Services.CardComparer
             Domain.Entities.GraphicCard graphicCard = new()
             {
                 Model = gpu.Model,
-                Prices = new Prices() { IsPriceEqual = false }
+                Prices = new Prices() { IsPriceEqual = false, CrawlTime = DateTime.UtcNow}
             };
             StringBuilder sb = new(gpu.Store);
 
-            graphicCard = ComparerHelper.SetVendorId(graphicCard, gpu);
-            graphicCard = ComparerHelper.SetSubvendor(graphicCard, gpu);
+            graphicCard.VendorId = (int)gpu.Vendor;
+            graphicCard.SubvendorId = (int)gpu.Subvendor;
 
             switch (gpu.Store)
             {
@@ -108,24 +106,10 @@ namespace GPUHunt.Application.Services.CardComparer
             if (graphicCard.Prices.MoreleActualPrice == graphicCard.Prices.XKomActualPrice)
             {
                 graphicCard.Prices.IsPriceEqual = true;
-                graphicCard.Prices.LowestPriceStore = new Store() { Name = sb.Append($", {equivalentGPU.Store}").ToString() };
-                graphicCard.Prices.LowestPrice = (decimal)graphicCard.Prices.MoreleActualPrice;
-            }
-
-            switch (graphicCard.Prices.MoreleActualPrice < graphicCard.Prices.XKomActualPrice)
-            {
-                case true:
-                    graphicCard.Prices.LowestPrice = (decimal)graphicCard.Prices.MoreleActualPrice;
-                    graphicCard.Prices.LowestPriceStore = new Store() { Name = "Morele" };
-                    graphicCard.Prices.HighestPrice = (decimal)graphicCard.Prices.XKomActualPrice;
-                    graphicCard.Prices.HighestPriceStore = new Store() { Name = "X-Kom" };
-                    break;
-                case false:
-                    graphicCard.Prices.LowestPrice = (decimal)graphicCard.Prices.XKomActualPrice;
-                    graphicCard.Prices.LowestPriceStore = new Store() { Name = "X-Kom" };
-                    graphicCard.Prices.HighestPrice = (decimal)graphicCard.Prices.MoreleActualPrice;
-                    graphicCard.Prices.HighestPriceStore = new Store() { Name = "Morele" };
-                    break;
+                graphicCard.Prices.MoreleLowestPriceEverCrawlDate = DateTime.UtcNow;
+                graphicCard.Prices.MoreleLowestPriceEver = (decimal)graphicCard.Prices.MoreleActualPrice;
+                graphicCard.Prices.XkomLowestPriceEverCrawlDate = DateTime.UtcNow;
+                graphicCard.Prices.XkomLowestPriceEver = (decimal)graphicCard.Prices.XKomActualPrice;
             }
 
             return graphicCard;

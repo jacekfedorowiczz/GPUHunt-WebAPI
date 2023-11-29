@@ -1,15 +1,16 @@
-﻿using GPUHunt.Application.Authentication;
+﻿using AutoMapper;
+using GPUHunt.Application.Authentication;
 using GPUHunt.Domain.Entities;
 using GPUHunt.Domain.Exceptions;
 using GPUHunt.Domain.Interfaces;
 using GPUHunt.Infrastructure.Persistance;
 using GPUHunt.Models.DTOs.Acccount;
+using GPUHunt.Models.DTOs.GraphicCard;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Text;
 
 namespace GPUHunt.Infrastructure.Repositories
@@ -18,15 +19,18 @@ namespace GPUHunt.Infrastructure.Repositories
     {
         private readonly GPUHuntDbContext _dbContext;
         private readonly IPasswordHasher<Account> _passwordHasher;
+        private readonly IMapper _mapper;
         private readonly AuthenticationSettings _authenticationSettings;
 
-        public AccountRepository(GPUHuntDbContext dbContext, IPasswordHasher<Account> passwordHasher, AuthenticationSettings authenticationSettings)
+        public AccountRepository(GPUHuntDbContext dbContext, IPasswordHasher<Account> passwordHasher, IMapper mapper, AuthenticationSettings authenticationSettings)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _authenticationSettings = authenticationSettings ?? throw new ArgumentNullException(nameof(authenticationSettings));
         }
 
+        #region Account CRUD
         public void CreateAccount(RegisterAccountDto registerDto)
         {
             var newAccount = new Account()
@@ -47,10 +51,6 @@ namespace GPUHunt.Infrastructure.Repositories
         public void DeleteAccount(int id)
         {
             var account = GetAccountById(id);
-            if (account == null)
-            {
-                throw new NotFoundException("User not found.");
-            }
 
             _dbContext.Accounts.Remove(account);
             _dbContext.SaveChanges();
@@ -59,10 +59,6 @@ namespace GPUHunt.Infrastructure.Repositories
         public Account GetAccountInfo(int id)
         {
             var account = GetAccountById(id);
-            if (account == null)
-            {
-                throw new NotFoundException("User not found.");
-            }
 
             return account;
         }
@@ -108,11 +104,7 @@ namespace GPUHunt.Infrastructure.Repositories
 
         public void UpdateAccount(UpdateAccountDto updateDto)
         {
-            var account = GetAccountByEmail(updateDto.Email);
-            if (account == null)
-            {
-                throw new NotFoundException("User not found.");
-            }
+            var account = GetAccountById(updateDto.Id);
 
             if (!string.IsNullOrWhiteSpace(updateDto.NewPassword))
             {
@@ -143,16 +135,53 @@ namespace GPUHunt.Infrastructure.Repositories
         {
             return _dbContext.Accounts.Any(a => a.Email == email);
         }
+        #endregion
 
+        #region Favorites 
+        public void AddGraphicCardToFavorites(GraphicCard graphicCard, int accountId)
+        {
+            var account = GetAccountById(accountId);
+
+            account.FavoritesGraphicCards.Add(graphicCard);
+            _dbContext.SaveChanges();
+        }
+
+        public void DeleteGraphicCardFromFavorites(GraphicCard graphicCard, int accountId)
+        {
+            var account = GetAccountById(accountId);
+
+            account.FavoritesGraphicCards.Remove(graphicCard);
+            _dbContext.SaveChanges();
+        }
+
+        public List<GraphicCardDto> GetFavorites(int accountId)
+        {
+            var account = GetAccountById(accountId);
+
+            var graphicCards = account.FavoritesGraphicCards.ToList();
+            var dtos = new List<GraphicCardDto>();
+
+            foreach (var graphicCard in graphicCards)
+            {
+                var dto = _mapper.Map<GraphicCardDto>(graphicCard);
+                dtos.Add(dto);
+            }
+
+            return dtos;
+        }
+        #endregion
+
+        #region Private methods
         private Account GetAccountById(int id)
         {
-            return _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
-        }
+            var account = _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
+            if (account == null)
+            {
+                throw new NotFoundException("Account not found.");
+            }
 
-        private Account GetAccountByEmail(string email)
-        {
-            return _dbContext.Accounts.FirstOrDefault(a => a.Email == email);
-
+            return account;
         }
+        #endregion
     }
 }

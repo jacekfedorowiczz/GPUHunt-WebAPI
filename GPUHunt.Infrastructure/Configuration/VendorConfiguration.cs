@@ -10,10 +10,6 @@ namespace GPUHunt.Infrastructure.Configuration
         {
             builder.Property(v => v.Name)
                 .IsRequired();
-
-            builder.HasMany(v => v.GraphicCards)
-                .WithOne(g => g.Vendor)
-                .HasForeignKey(g => g.VendorId);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using GPUHunt.Infrastructure.Persistance;
+﻿using GPUHunt.Domain.Enums;
+using GPUHunt.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace GPUHunt.Infrastructure.Seeders
@@ -38,6 +39,20 @@ namespace GPUHunt.Infrastructure.Seeders
                     _dbContext.Roles.AddRange(roles);
                     _dbContext.SaveChanges();
                 }
+
+                if (!_dbContext.Vendors.Any())
+                {
+                    var vendors = GetVendors();
+                    _dbContext.Vendors.AddRange(vendors);
+                    _dbContext.SaveChanges();
+                }
+
+                if (!_dbContext.Subvendors.Any())
+                {
+                    var subvendors = GetSubvendors();
+                    _dbContext.Subvendors.AddRange(subvendors);
+                    _dbContext.SaveChanges();
+                }
             }
         }
 
@@ -47,7 +62,7 @@ namespace GPUHunt.Infrastructure.Seeders
         /// <returns></returns>
         private IEnumerable<Domain.Entities.Role> GetRoles()
         {
-            var roles = new List<Domain.Entities.Role>()
+            return new List<Domain.Entities.Role>()
             {
                 new Domain.Entities.Role()
                 {
@@ -65,8 +80,6 @@ namespace GPUHunt.Infrastructure.Seeders
                     Description = "Moderator"
                 }
             };
-
-            return roles;
         }
 
         /// <summary>
@@ -75,7 +88,7 @@ namespace GPUHunt.Infrastructure.Seeders
         /// <returns></returns>
         private IEnumerable<Domain.Entities.Store> GetStores()
         {
-            var vendors = new List<Domain.Entities.Store>()
+            return new List<Domain.Entities.Store>()
             {
                 new Domain.Entities.Store()
                 {
@@ -85,9 +98,47 @@ namespace GPUHunt.Infrastructure.Seeders
                 {
                     Name = "X-Kom"
                 },
+                new Domain.Entities.Store()
+                {
+                    Name = "The equal price"
+                }
             };
+        }
 
-            return vendors;
+        private IEnumerable<Domain.Entities.Vendor> GetVendors()
+        {
+            return new List<Domain.Entities.Vendor>()
+            {
+                new Domain.Entities.Vendor()
+                {
+                    Name = "Undefinied"
+                },
+                new Domain.Entities.Vendor()
+                {
+                    Name = "NVIDIA"
+                },
+                new Domain.Entities.Vendor()
+                {
+                    Name = "AMD"
+                },
+                new Domain.Entities.Vendor()
+                {
+                    Name = "Intel"
+                }
+            };
+        }
+
+        private IEnumerable<Domain.Entities.Subvendor> GetSubvendors()
+        {
+            var values = Enum.GetValues<Subvendors>().ToList();
+            var subvendors = new List<Domain.Entities.Subvendor>();
+
+            foreach (var value in values)
+            {
+                subvendors.Add(new Domain.Entities.Subvendor() { Name = value.ToString() });
+            }
+
+            return subvendors;
         }
     }
 }

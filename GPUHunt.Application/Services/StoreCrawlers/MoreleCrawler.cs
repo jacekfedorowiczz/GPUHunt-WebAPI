@@ -12,11 +12,11 @@ namespace GPUHunt.Application.Services.StoreCrawlers
     {
         readonly HtmlWeb Web = new();
         readonly NumberFormatInfo Nfi = new CultureInfo("pl-PL", false).NumberFormat;
-        private readonly String _nextSiteSelector = "li.pagination-lg.next > link";
-        private readonly String _gpuCardSelector = ".cat-product.card";
-        private readonly String _gpuNameSelector = ".cat-product-name > h2 > a";
-        private readonly String _gpuPriceSelector = ".price-new";
-        private readonly String _characterToAvoid = "(";
+        private readonly string _nextSiteSelector = "li.pagination-lg.next > link";
+        private readonly string _gpuCardSelector = ".cat-product.card";
+        private readonly string _gpuNameSelector = ".cat-product-name > h2 > a";
+        private readonly string _gpuPriceSelector = ".price-new";
+        private readonly string _characterToAvoid = "(";
         private readonly ICardSetter _cardSetter;
 
         protected string MoreleBaseURL { get; private set; } =
@@ -98,8 +98,8 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             var gpuPrice = decimal.Parse(gpu.QuerySelector(_gpuPriceSelector)
                                     .InnerText
                                     .ToString(Nfi)
-                                    .Replace("zł", "")
-                                    .Replace("od", ""));
+                                    .Replace("zł", string.Empty)
+                                    .Replace("od", string.Empty));
 
 
             var start = gpuName.IndexOf("Karta");
@@ -107,6 +107,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
 
             if (gpuName.Contains(_characterToAvoid))
             {
+                // TODO: FIX
                 gpuName = gpuName.Substring(0, gpuName.IndexOf(_characterToAvoid)).Trim();
             }
 

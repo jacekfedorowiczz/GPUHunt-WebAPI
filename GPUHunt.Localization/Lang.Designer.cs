@@ -59,5 +59,41 @@ namespace GPUHunt.Localization {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Morele.
+        /// </summary>
+        internal static string Morele {
+            get {
+                return ResourceManager.GetString("Morele", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.morele.net/kategoria/karty-graficzne-12/,,,,,,,,0,,,,8143O368064.1800730.1997842.470265.629277.1070067.976407.974080.1163157.955615.955614.1123985.1111434.1258915.2083200.1591770.1649860.1580461.1646742.1576222.1567369.1609819.1497277.1609833.1613601.1967000.1760879.1728675.1689348.1827217.1689340.1827334.1689334.2027819.2073326.2073322.2087937.2119318.2135123.2139481,8143O!2837.!2835,sprzedawca:m/1/?noi.
+        /// </summary>
+        internal static string MoreleUrlBase {
+            get {
+                return ResourceManager.GetString("MoreleUrlBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X-Kom.
+        /// </summary>
+        internal static string XKom {
+            get {
+                return ResourceManager.GetString("XKom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.x-kom.pl/g-5/c/345-karty-graficzne.html?f1702-uklad-graficzny=24826-amd-radeon&amp;f1702-uklad-graficzny=24827-nvidia-geforce&amp;f1702-uklad-graficzny=97290-nvidia-quadro&amp;f1702-uklad-graficzny=108431-amd-radeon-pro&amp;f1702-uklad-graficzny=262522-intel-arc.
+        /// </summary>
+        internal static string XKomUrlBase {
+            get {
+                return ResourceManager.GetString("XKomUrlBase", resourceCulture);
+            }
+        }
     }
 }

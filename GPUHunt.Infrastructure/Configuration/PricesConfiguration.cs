@@ -8,20 +8,10 @@ namespace GPUHunt.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Prices> builder)
         {
-            builder.Property(p => p.CrawlTime)
-                .ValueGeneratedOnAddOrUpdate();
-
             builder.Property(p => p.MoreleActualPrice)
                 .HasPrecision(7, 2);
 
             builder.Property(p => p.XKomActualPrice)
-                .HasPrecision(7, 2);
-
-            builder.Property(p => p.LowestPrice)
-                .IsRequired()
-                .HasPrecision(7, 2);
-                
-            builder.Property(p => p.HighestPrice)
                 .HasPrecision(7, 2);
 
             builder.Property(p => p.MoreleLowestPriceEver)

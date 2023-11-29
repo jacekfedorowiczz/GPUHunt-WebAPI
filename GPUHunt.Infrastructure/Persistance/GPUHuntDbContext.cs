@@ -23,6 +23,11 @@ namespace GPUHunt.Infrastructure.Persistance
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GraphicCardConfiguration).Assembly);
 
+            modelBuilder.Entity<GraphicCard>()
+                .HasOne(g => g.Subvendor)
+                .WithMany(s => s.GraphicCards)
+                .HasForeignKey(g => g.SubvendorId);
+
             base.OnModelCreating(modelBuilder);
         }
     }

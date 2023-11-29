@@ -10,5 +10,6 @@ namespace GPUHunt.Application.Models
         public string Model { get; set; }
         public decimal Price { get; set; }
         public string Store { get; set; }
+        public DateTime CrawlTime { get; set; } = DateTime.UtcNow;
     }
 }

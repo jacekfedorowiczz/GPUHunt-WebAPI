@@ -11,6 +11,5 @@ namespace GPUHunt.Domain.Interfaces
         void Update (IEnumerable<GraphicCard> graphicCards);
         void Delete(int id);
         bool isDatabaseNotEmpty();
-        void AddToFavorites(int id, int userId);
     }
 }

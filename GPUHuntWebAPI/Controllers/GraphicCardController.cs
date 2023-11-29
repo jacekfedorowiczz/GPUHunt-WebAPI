@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GPUHunt.Application.GraphicCard.Commands.CrawlGraphicCards;
 using GPUHunt.Application.GraphicCard.Queries.ScrapGraphicCards;
+using GPUHunt.Domain.Interfaces;
 using GPUHunt.Infrastructure.Repositories;
 using GPUHunt.Models.Enums;
 using GPUHunt.Models.Models;
@@ -15,9 +16,9 @@ namespace GPUHuntWebAPI.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        private readonly GraphicCardRepository _repository;
+        private readonly IGraphicCardRepository _repository;
 
-        public GraphicCardController(IMediator mediator, IMapper mapper, GraphicCardRepository repository)
+        public GraphicCardController(IMediator mediator, IMapper mapper, IGraphicCardRepository repository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

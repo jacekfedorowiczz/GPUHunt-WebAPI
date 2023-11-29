@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using GPUHunt.Application.Account.Commands.RegisterAccount;
 using GPUHunt.Application.ApplicationUser;
 using GPUHunt.Application.Authentication;
+using GPUHunt.Application.Authorization;
 using GPUHunt.Application.GraphicCard.Commands.CrawlGraphicCards;
 using GPUHunt.Application.Interfaces;
 using GPUHunt.Application.Services.CardComparer;
@@ -13,6 +14,7 @@ using GPUHunt.Application.Services.CardUpdater;
 using GPUHunt.Application.Services.CardValidator;
 using GPUHunt.Application.Services.StoreCrawlers;
 using GPUHunt.Application.Services.ValidatorStrategy;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,10 +45,23 @@ namespace GPUHunt.Application.Extensions
             services.AddScoped<IValidatorStrategyContext, ValidatorStrategyContext>();
             services.AddScoped<IValidationStrategy, ValidationWithUpdateStrategy>();
             services.AddScoped<IValidationStrategy, ValidationWithoutUpdateStrategy>();
+            services.AddScoped<IAuthorizationHandler, AccountOperationRequirementHandler>();
+            
             services.AddHttpContextAccessor();
-
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(CrawlGraphicCardsCommand)));
             services.AddAutoMapper(cfg => cfg.AddMaps(typeof(ServiceCollectionExtension).Assembly));
+
+            services.AddValidatorsFromAssemblyContaining<RegisterAccountDtoValidator>()
+                        .AddFluentValidationAutoValidation()
+                        .AddFluentValidationClientsideAdapters();
+
+
+            services.AddAuthorization(options =>
+            {
+                // TODO: DODAJ JEDNĄ CUSTOMOWĄ POLITYKĘ AUTORYZACJI
+                //options.AddPolicy("testName", builder => builder.AddRequirements(new Requirement))
+            });
+
 
             services.AddAuthentication(option =>
             {
@@ -65,11 +80,6 @@ namespace GPUHunt.Application.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
                 };
             });
-
-            services.AddValidatorsFromAssemblyContaining<RegisterAccountDtoValidator>()
-                    .AddFluentValidationAutoValidation()
-                    .AddFluentValidationClientsideAdapters();
-
         }
     }
 }
