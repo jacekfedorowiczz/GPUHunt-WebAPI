@@ -1,5 +1,6 @@
 using GPUHunt.Application.Authentication;
 using GPUHunt.Application.Extensions;
+using GPUHunt.Application.Mappings;
 using GPUHunt.Infrastructure.Extenstions;
 using GPUHunt.Infrastructure.Seeders;
 using GPUHuntWebAPI.Middlewares;
