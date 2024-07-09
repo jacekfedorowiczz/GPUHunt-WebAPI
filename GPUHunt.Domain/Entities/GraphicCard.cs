@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GPUHunt.Domain.Entities
 {
@@ -13,5 +12,7 @@ namespace GPUHunt.Domain.Entities
         public Subvendor Subvendor { get; set; }
         public int SubvendorId { get; set; }
         public Prices Prices { get; set; }
+
+        public List<FavouriteCards> FavouriteCards { get; set; }
     }
 }

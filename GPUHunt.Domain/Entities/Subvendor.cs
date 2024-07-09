@@ -8,6 +8,6 @@ namespace GPUHunt.Domain.Entities
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public IEnumerable<Domain.Entities.GraphicCard> GraphicCards { get; set; } = new List<Domain.Entities.GraphicCard>();
+        public List<GraphicCard> GraphicCards { get; set; } = new List<GraphicCard>();
     }
 }

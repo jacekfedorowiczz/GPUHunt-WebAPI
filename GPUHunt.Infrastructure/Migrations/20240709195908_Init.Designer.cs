@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GPUHunt.Infrastructure.Migrations
 {
     [DbContext(typeof(GPUHuntDbContext))]
-    [Migration("20231129225826_Init")]
+    [Migration("20240709195908_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -20,10 +20,25 @@ namespace GPUHunt.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("FavouriteCardsGraphicCard", b =>
+                {
+                    b.Property<int>("FavouriteCardsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GraphicCardsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FavouriteCardsId", "GraphicCardsId");
+
+                    b.HasIndex("GraphicCardsId");
+
+                    b.ToTable("FavouriteCardsGraphicCard");
+                });
 
             modelBuilder.Entity("GPUHunt.Domain.Entities.Account", b =>
                 {
@@ -55,7 +70,7 @@ namespace GPUHunt.Infrastructure.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("GPUHunt.Domain.Entities.GraphicCard", b =>
+            modelBuilder.Entity("GPUHunt.Domain.Entities.FavouriteCards", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,8 +78,24 @@ namespace GPUHunt.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique();
+
+                    b.ToTable("FavouriteCards");
+                });
+
+            modelBuilder.Entity("GPUHunt.Domain.Entities.GraphicCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Model")
                         .IsRequired()
@@ -77,8 +108,6 @@ namespace GPUHunt.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
 
                     b.HasIndex("SubvendorId");
 
@@ -169,23 +198,6 @@ namespace GPUHunt.Infrastructure.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("GPUHunt.Domain.Entities.Store", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Stores");
-                });
-
             modelBuilder.Entity("GPUHunt.Domain.Entities.Subvendor", b =>
                 {
                     b.Property<int>("Id")
@@ -220,6 +232,21 @@ namespace GPUHunt.Infrastructure.Migrations
                     b.ToTable("Vendors");
                 });
 
+            modelBuilder.Entity("FavouriteCardsGraphicCard", b =>
+                {
+                    b.HasOne("GPUHunt.Domain.Entities.FavouriteCards", null)
+                        .WithMany()
+                        .HasForeignKey("FavouriteCardsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GPUHunt.Domain.Entities.GraphicCard", null)
+                        .WithMany()
+                        .HasForeignKey("GraphicCardsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GPUHunt.Domain.Entities.Account", b =>
                 {
                     b.HasOne("GPUHunt.Domain.Entities.Role", "Role")
@@ -231,12 +258,19 @@ namespace GPUHunt.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("GPUHunt.Domain.Entities.FavouriteCards", b =>
+                {
+                    b.HasOne("GPUHunt.Domain.Entities.Account", "Account")
+                        .WithOne("FavoritesGraphicCards")
+                        .HasForeignKey("GPUHunt.Domain.Entities.FavouriteCards", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("GPUHunt.Domain.Entities.GraphicCard", b =>
                 {
-                    b.HasOne("GPUHunt.Domain.Entities.Account", null)
-                        .WithMany("FavoritesGraphicCards")
-                        .HasForeignKey("AccountId");
-
                     b.HasOne("GPUHunt.Domain.Entities.Subvendor", "Subvendor")
                         .WithMany("GraphicCards")
                         .HasForeignKey("SubvendorId")
@@ -267,7 +301,8 @@ namespace GPUHunt.Infrastructure.Migrations
 
             modelBuilder.Entity("GPUHunt.Domain.Entities.Account", b =>
                 {
-                    b.Navigation("FavoritesGraphicCards");
+                    b.Navigation("FavoritesGraphicCards")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GPUHunt.Domain.Entities.GraphicCard", b =>

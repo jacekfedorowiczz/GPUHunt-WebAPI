@@ -26,19 +26,6 @@ namespace GPUHunt.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Stores",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stores", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Subvendors",
                 columns: table => new
                 {
@@ -94,17 +81,11 @@ namespace GPUHunt.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VendorId = table.Column<int>(type: "int", nullable: false),
-                    SubvendorId = table.Column<int>(type: "int", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: true)
+                    SubvendorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GraphicCards", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GraphicCards_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_GraphicCards_Subvendors_SubvendorId",
                         column: x => x.SubvendorId,
@@ -115,6 +96,25 @@ namespace GPUHunt.Infrastructure.Migrations
                         name: "FK_GraphicCards_Vendors_VendorId",
                         column: x => x.VendorId,
                         principalTable: "Vendors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FavouriteCards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavouriteCards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FavouriteCards_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -150,15 +150,45 @@ namespace GPUHunt.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FavouriteCardsGraphicCard",
+                columns: table => new
+                {
+                    FavouriteCardsId = table.Column<int>(type: "int", nullable: false),
+                    GraphicCardsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavouriteCardsGraphicCard", x => new { x.FavouriteCardsId, x.GraphicCardsId });
+                    table.ForeignKey(
+                        name: "FK_FavouriteCardsGraphicCard_FavouriteCards_FavouriteCardsId",
+                        column: x => x.FavouriteCardsId,
+                        principalTable: "FavouriteCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FavouriteCardsGraphicCard_GraphicCards_GraphicCardsId",
+                        column: x => x.GraphicCardsId,
+                        principalTable: "GraphicCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_RoleId",
                 table: "Accounts",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GraphicCards_AccountId",
-                table: "GraphicCards",
-                column: "AccountId");
+                name: "IX_FavouriteCards_AccountId",
+                table: "FavouriteCards",
+                column: "AccountId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavouriteCardsGraphicCard_GraphicCardsId",
+                table: "FavouriteCardsGraphicCard",
+                column: "GraphicCardsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GraphicCards_SubvendorId",
@@ -181,10 +211,13 @@ namespace GPUHunt.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "FavouriteCardsGraphicCard");
+
+            migrationBuilder.DropTable(
                 name: "Prices");
 
             migrationBuilder.DropTable(
-                name: "Stores");
+                name: "FavouriteCards");
 
             migrationBuilder.DropTable(
                 name: "GraphicCards");

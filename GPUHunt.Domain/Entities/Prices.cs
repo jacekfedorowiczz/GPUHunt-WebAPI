@@ -8,7 +8,6 @@ namespace GPUHunt.Domain.Entities
         [Key]
         public int Id { get; set; }
         public GraphicCard GraphicCard { get; set; }
-        [ForeignKey(nameof(GraphicCard))]
         public int GraphicCardId { get; set; }
 
         public decimal? MoreleActualPrice { get; set; } = null;

@@ -142,7 +142,7 @@ namespace GPUHunt.Infrastructure.Repositories
         {
             var account = GetAccountById(accountId);
 
-            account.FavoritesGraphicCards.Add(graphicCard);
+            account.FavoritesGraphicCards.GraphicCards.Add(graphicCard);
             _dbContext.SaveChanges();
         }
 
@@ -150,7 +150,7 @@ namespace GPUHunt.Infrastructure.Repositories
         {
             var account = GetAccountById(accountId);
 
-            account.FavoritesGraphicCards.Remove(graphicCard);
+            account.FavoritesGraphicCards.GraphicCards.Remove(graphicCard);
             _dbContext.SaveChanges();
         }
 
@@ -158,7 +158,7 @@ namespace GPUHunt.Infrastructure.Repositories
         {
             var account = GetAccountById(accountId);
 
-            var graphicCards = account.FavoritesGraphicCards.ToList();
+            var graphicCards = account.FavoritesGraphicCards.GraphicCards;
             var dtos = new List<GraphicCardDto>();
 
             foreach (var graphicCard in graphicCards)

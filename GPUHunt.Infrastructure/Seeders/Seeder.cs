@@ -28,12 +28,7 @@ namespace GPUHunt.Infrastructure.Seeders
                     _dbContext.Database.Migrate();
                 }
 
-                if (!_dbContext.Stores.Any())
-                {
-                    var stores = GetStores();
-                    _dbContext.Stores.AddRange(stores);
-                    _dbContext.SaveChanges();
-                }
+
                 if (!_dbContext.Roles.Any())
                 {
                     var roles = GetRoles();
@@ -79,29 +74,6 @@ namespace GPUHunt.Infrastructure.Seeders
                 {
                     Name = ConstValues.ModeratorRoleName,
                     Description = ConstValues.ModeratorRoleDescription
-                }
-            };
-        }
-
-        /// <summary>
-        /// Returns initial collection of stores 
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerable<Domain.Entities.Store> GetStores()
-        {
-            return new List<Domain.Entities.Store>()
-            {
-                new Domain.Entities.Store()
-                {
-                    Name = ConstValues.MoreleStoreName,
-                },
-                new Domain.Entities.Store()
-                {
-                    Name = ConstValues.XKomStoreName,
-                },
-                new Domain.Entities.Store()
-                {
-                    Name = ConstValues.SamePrice
                 }
             };
         }
