@@ -2,6 +2,7 @@
 using GPUHunt.Application.Interfaces;
 using GPUHunt.Domain.Interfaces;
 using GPUHunt.Models.DTOs.GraphicCard;
+using GPUHunt.Models.Models;
 using Newtonsoft.Json;
 
 namespace GPUHunt.Application.Services.CardScraper
@@ -19,13 +20,15 @@ namespace GPUHunt.Application.Services.CardScraper
                 throw new ArgumentNullException(nameof(mapper));
         }
 
-        public string Scrap()
+        public string Scrap(GetGraphicCardQuery? query = null)
         {
             try
             {
                 JsonSerializerSettings config = new() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, };
 
-                var gpus = _graphicCardRepository.GetAllGraphicCards();
+
+
+                var gpus = query is null ? _graphicCardRepository.GetAllGraphicCards() : _graphicCardRepository.GetGraphicCards(query).Items;
                 var dtos = _mapper.Map<IEnumerable<GraphicCardDto>>(gpus);
                 var json = JsonConvert.SerializeObject(dtos, config);
 

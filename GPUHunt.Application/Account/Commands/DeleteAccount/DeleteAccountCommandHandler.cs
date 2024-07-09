@@ -1,4 +1,5 @@
 ﻿using GPUHunt.Application.Interfaces;
+using GPUHunt.Domain.Constanst;
 using GPUHunt.Domain.Exceptions;
 using GPUHunt.Domain.Interfaces;
 using MediatR;
@@ -19,7 +20,7 @@ namespace GPUHunt.Application.Account.Commands.DeleteAccount
         public Task Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
         {
             var user = _userContext.GetCurrentUser()!;
-            if (int.Parse(user.Id) != request.Id && !(user.IsInRole("Admin") || user.IsInRole("Moderator")))
+            if (int.Parse(user.Id) != request.Id && !(user.IsInRole(ConstValues.AdminRoleName) || user.IsInRole(ConstValues.ModeratorRoleName)))
             {
                 throw new ForbidException("Deleting accounts other than your own requires administrative privileges.");
             }

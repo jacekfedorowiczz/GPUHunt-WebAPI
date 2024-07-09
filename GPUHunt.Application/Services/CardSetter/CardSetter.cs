@@ -1,19 +1,30 @@
 ﻿using GPUHunt.Application.Interfaces;
 using GPUHunt.Domain.Enums;
-using System.Globalization;
 
 namespace GPUHunt.Application.Services.CardSetter
 {
     public class CardSetter : ICardSetter
     {
+        private const string _geforce = "geforce";
+        private const string _quadro = "quadro";
+        private const string _gtx = "gtx";
+        private const string _rtx = "rtx";
+
+        private const string _radeon = "radeon";
+        private const string _rx = "rx";
+
+        private const string _intel = "intel";
+        private const string _arc = "arc";
+
+
         public Subvendors SetSubvendor(string gpuName)
         {
             var subvendors = Enum.GetNames<Subvendors>();
+            gpuName = gpuName.ToLower();
 
             for (int i = 0; i < subvendors.Length; i++)
             {
-                var x = subvendors[i].ToLower();
-                if (gpuName.ToLower().Contains(subvendors[i].ToLower()))
+                if (gpuName.Contains(subvendors[i], StringComparison.CurrentCultureIgnoreCase))
                 {
                     return (Subvendors)Enum.Parse(typeof(Subvendors), subvendors[i]);
                 }
@@ -24,18 +35,19 @@ namespace GPUHunt.Application.Services.CardSetter
 
         public Vendors SetVendor(string gpuName)
         {
-            TextInfo textInfo = new CultureInfo("pl-PL", false).TextInfo;
             Vendors vendor;
 
-            if (textInfo.ToLower(gpuName).Contains("geforce") || textInfo.ToLower(gpuName).Contains("quadro") || textInfo.ToLower(gpuName).Contains("gtx") || textInfo.ToLower(gpuName).Contains("rtx"))
+            gpuName = gpuName.ToLower();
+
+            if (gpuName.Contains(_geforce) || gpuName.Contains(_quadro) || gpuName.Contains(_gtx) || gpuName.Contains(_rtx))
             {
                 vendor = Vendors.NVIDIA;
             }
-            else if (textInfo.ToLower(gpuName).Contains("radeon") || textInfo.ToLower(gpuName).Contains("rx"))
+            else if (gpuName.Contains(_radeon) || gpuName.Contains(_rx))
             {
                 vendor = Vendors.AMD;
             }
-            else if (textInfo.ToLower(gpuName).Contains("intel") || textInfo.ToLower(gpuName).Contains("arc"))
+            else if (gpuName.Contains(_intel) || gpuName.Contains(_arc))
             {
                 vendor = Vendors.Intel;
             }

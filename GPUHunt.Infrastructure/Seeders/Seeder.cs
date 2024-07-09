@@ -1,4 +1,5 @@
-﻿using GPUHunt.Domain.Enums;
+﻿using GPUHunt.Domain.Constanst;
+using GPUHunt.Domain.Enums;
 using GPUHunt.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,18 +67,18 @@ namespace GPUHunt.Infrastructure.Seeders
             {
                 new Domain.Entities.Role()
                 {
-                    Name = "User",
-                    Description = "Basic role for new accounts"
+                    Name = ConstValues.UserRoleName,
+                    Description = ConstValues.UserRoleDescription
                 },
                 new Domain.Entities.Role()
                 {
-                    Name = "Admin",
-                    Description = "Administrator"
+                    Name = ConstValues.AdminRoleName,
+                    Description = ConstValues.AdminRoleDescription
                 },
                 new Domain.Entities.Role()
                 {
-                    Name = "Moderator",
-                    Description = "Moderator"
+                    Name = ConstValues.ModeratorRoleName,
+                    Description = ConstValues.ModeratorRoleDescription
                 }
             };
         }
@@ -92,15 +93,15 @@ namespace GPUHunt.Infrastructure.Seeders
             {
                 new Domain.Entities.Store()
                 {
-                    Name = "Morele"
+                    Name = ConstValues.MoreleStoreName,
                 },
                 new Domain.Entities.Store()
                 {
-                    Name = "X-Kom"
+                    Name = ConstValues.XKomStoreName,
                 },
                 new Domain.Entities.Store()
                 {
-                    Name = "The equal price"
+                    Name = ConstValues.SamePrice
                 }
             };
         }
@@ -111,19 +112,19 @@ namespace GPUHunt.Infrastructure.Seeders
             {
                 new Domain.Entities.Vendor()
                 {
-                    Name = "Undefinied"
+                    Name = ConstValues.VendorUndefined
                 },
                 new Domain.Entities.Vendor()
                 {
-                    Name = "NVIDIA"
+                    Name = ConstValues.VendorNVIDIA
                 },
                 new Domain.Entities.Vendor()
                 {
-                    Name = "AMD"
+                    Name = ConstValues.VendorAMD
                 },
                 new Domain.Entities.Vendor()
                 {
-                    Name = "Intel"
+                    Name = ConstValues.VendorIntel
                 }
             };
         }

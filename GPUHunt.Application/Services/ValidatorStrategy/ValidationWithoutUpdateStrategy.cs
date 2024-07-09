@@ -8,7 +8,7 @@ namespace GPUHunt.Application.Services.ValidatorStrategy
     {
         public ValidationModel Validate(IEnumerable<Domain.Entities.GraphicCard> graphicCards)
         {
-            ValidationModel model = new() { ActionType = GPUHunt.Models.Enums.ActionType.Init };
+            ValidationModel model = new(GPUHunt.Models.Enums.ActionType.Init);
 
             foreach (var graphicCard in graphicCards)
             {

@@ -1,7 +1,9 @@
-﻿namespace GPUHunt.Application.Interfaces
+﻿using GPUHunt.Models.Models;
+
+namespace GPUHunt.Application.Interfaces
 {
     public interface ICardScraper
     {
-        string Scrap();
+        string Scrap(GetGraphicCardQuery? query = null);
     }
 }

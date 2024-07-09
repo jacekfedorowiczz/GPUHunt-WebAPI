@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GPUHunt.Domain\GPUHunt.Domain.csproj" />
-    <ProjectReference Include="..\GPUHunt.Localization\GPUHunt.Localization.csproj" />
   </ItemGroup>
 
 </Project>

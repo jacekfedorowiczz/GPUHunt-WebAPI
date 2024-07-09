@@ -10,11 +10,13 @@ namespace GPUHunt.Infrastructure.Extenstions
 {
     public static class ServiceCollectionExtensions
     {
+        private const string _localConnectionString = "MainDatabase";
+
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<GPUHuntDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("MainDatabase"));
+                options.UseSqlServer(configuration.GetConnectionString(_localConnectionString));
             });
 
             services.AddScoped<IGraphicCardRepository, GraphicCardRepository>();

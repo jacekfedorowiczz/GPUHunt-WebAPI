@@ -1,5 +1,6 @@
 ﻿using GPUHunt.Application.Interfaces;
 using GPUHunt.Application.Models;
+using GPUHunt.Domain.Constanst;
 using GPUHunt.Domain.Enums;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
@@ -17,6 +18,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
         private readonly string _gpuNameSelector = ".cat-product-name > h2 > a";
         private readonly string _gpuPriceSelector = ".price-new";
         private readonly string _characterToAvoid = "(";
+        private readonly string _title = "title";
         private readonly ICardSetter _cardSetter;
 
         protected string MoreleBaseURL { get; private set; } =
@@ -46,16 +48,16 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             var document = Web.Load(MoreleBaseURL);
             var urls = new List<string>() { MoreleBaseURL };
 
-            if (document.QuerySelector(_nextSiteSelector).Attributes["href"].Value != null)
+            if (document.QuerySelector(_nextSiteSelector).Attributes[ConstValues.Href].Value != null)
             {
-                var nextPageUrl = "https://www.morele.net" + document.QuerySelector(_nextSiteSelector).Attributes["href"].Value.ToString();
+                var nextPageUrl = "https://www.morele.net" + document.QuerySelector(_nextSiteSelector).Attributes[ConstValues.Href].Value.ToString();
                 while (nextPageUrl != null)
                 {
                     urls.Add(nextPageUrl);
                     var newDocument = Web.Load(nextPageUrl);
                     if (newDocument.QuerySelector(_nextSiteSelector) != null)
                     {
-                        nextPageUrl = "https://www.morele.net" + newDocument.QuerySelector(_nextSiteSelector).Attributes["href"].Value.ToString();
+                        nextPageUrl = "https://www.morele.net" + newDocument.QuerySelector(_nextSiteSelector).Attributes[ConstValues.Href].Value.ToString();
                     }
                     else
                     {
@@ -92,7 +94,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             StringBuilder sb = new();
 
             var gpuName = gpu.QuerySelector(_gpuNameSelector)
-                                    .Attributes["title"]
+                                    .Attributes[_title]
                                     .Value;
 
             var gpuPrice = decimal.Parse(gpu.QuerySelector(_gpuPriceSelector)
@@ -111,8 +113,8 @@ namespace GPUHunt.Application.Services.StoreCrawlers
                 gpuName = gpuName.Substring(0, gpuName.IndexOf(_characterToAvoid)).Trim();
             }
 
-            Vendors gpuVendor = _cardSetter.SetVendor(gpuName.ToLower());
-            Subvendors gpuSubvendor = _cardSetter.SetSubvendor(gpuName.ToLower());
+            Vendors gpuVendor = _cardSetter.SetVendor(gpuName);
+            Subvendors gpuSubvendor = _cardSetter.SetSubvendor(gpuName);
 
             var gpuModel = sb.Append(gpuName).Remove(start, end + 9).ToString().Trim();
 
@@ -123,7 +125,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
                 Subvendor = gpuSubvendor,
                 Model = gpuModel,
                 Price = gpuPrice,
-                Store = "Morele"
+                Store = ConstValues.MoreleStoreName
             };
 
             return result;

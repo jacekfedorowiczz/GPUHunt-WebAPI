@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GPUHunt.Domain.Entities
 {
     public class Prices
     {
+        [Key]
         public int Id { get; set; }
         public GraphicCard GraphicCard { get; set; }
         [ForeignKey(nameof(GraphicCard))]

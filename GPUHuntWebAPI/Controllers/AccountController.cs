@@ -19,10 +19,14 @@ namespace GPUHuntWebAPI.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
+        private CancellationTokenSource cts;
+
         public AccountController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+
+            cts = new();
         }
 
         [Authorize]

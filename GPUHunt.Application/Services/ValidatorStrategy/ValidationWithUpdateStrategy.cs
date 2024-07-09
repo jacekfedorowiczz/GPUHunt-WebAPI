@@ -1,6 +1,7 @@
 ﻿using GPUHunt.Application.Interfaces;
 using GPUHunt.Application.Models;
 using GPUHunt.Domain.Interfaces;
+using GPUHunt.Models.Enums;
 
 namespace GPUHunt.Application.Services.ValidatorStrategy
 {
@@ -15,13 +16,13 @@ namespace GPUHunt.Application.Services.ValidatorStrategy
 
         public ValidationModel Validate(IEnumerable<Domain.Entities.GraphicCard> graphicCards)
         {
-            ValidationModel model = new() { ActionType = GPUHunt.Models.Enums.ActionType.Update, CardsToUpdate = new List<Domain.Entities.GraphicCard>() };
+            ValidationModel model = new(ActionType.Update) { CardsToUpdate = new List<Domain.Entities.GraphicCard>() };
 
             var gpusFromDatabase =  _repository.GetAllGraphicCards();
 
             foreach (var graphicCard in graphicCards)
             {
-                var sameGpu = gpusFromDatabase.FirstOrDefault(gd => gd.Model.ToUpper() == graphicCard.Model.ToUpper());
+                var sameGpu = gpusFromDatabase.FirstOrDefault(gd => gd.Model.Equals(graphicCard.Model, StringComparison.CurrentCultureIgnoreCase));
                 if (sameGpu != null)
                 {
                     var validatedGPU = ValidateGPUsInfo(graphicCard, sameGpu);
@@ -49,7 +50,7 @@ namespace GPUHunt.Application.Services.ValidatorStrategy
             if (graphicCard.Prices.XKomActualPrice >= gpuFromDatabase.Prices.XkomHighestPriceEver)
             {
                 gpuFromDatabase.Prices.XkomHighestPriceEver = graphicCard.Prices.XKomActualPrice;
-                gpuFromDatabase.Prices.XkomHighestPriceEverCrawlDate = DateTime.UtcNow;
+                gpuFromDatabase.Prices.XkomHighestPriceEverCrawlDate = DateTime.UtcNow; 
             }
             else if (graphicCard.Prices.XKomActualPrice <= gpuFromDatabase.Prices.XkomLowestPriceEver)
             {

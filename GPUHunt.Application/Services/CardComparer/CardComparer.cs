@@ -1,8 +1,7 @@
-﻿using GPUHunt.Application.Helpers;
-using GPUHunt.Application.Interfaces;
+﻿using GPUHunt.Application.Interfaces;
 using GPUHunt.Application.Models;
+using GPUHunt.Domain.Constanst;
 using GPUHunt.Domain.Entities;
-using GPUHunt.Domain.Enums;
 using System.Text;
 
 namespace GPUHunt.Application.Services.CardComparer
@@ -31,9 +30,10 @@ namespace GPUHunt.Application.Services.CardComparer
 
             foreach ( var gpu in gpus)
             {
-                if (graphicCards.FirstOrDefault(gc => gc.Model.ToUpper() == gpu.Model.ToUpper()) == null)
+                if (graphicCards.FirstOrDefault(gc => gc.Model.Equals(gpu.Model, StringComparison.CurrentCultureIgnoreCase)) == null)
                 {
-                    var equivalentGPU = gpus.FirstOrDefault(eg => eg.Model.ToUpper() == gpu.Model.ToUpper() && eg.Store.ToUpper() != gpu.Store.ToUpper());
+                    var equivalentGPU = gpus.FirstOrDefault(eg => eg.Model.Equals(gpu.Model, StringComparison.CurrentCultureIgnoreCase) && 
+                                                            eg.Store.Equals(gpu.Store, StringComparison.CurrentCultureIgnoreCase));
 
                     if (equivalentGPU == null)
                     {
@@ -63,11 +63,11 @@ namespace GPUHunt.Application.Services.CardComparer
 
             switch (gpu.Store)
             {
-                case "Morele":
+                case ConstValues.MoreleStoreName:
                     graphicCard.Prices.MoreleLowestPriceEverCrawlDate = DateTime.UtcNow;
                     graphicCard.Prices.MoreleActualPrice = gpu.Price;
                     break;
-                case "X-Kom":
+                case ConstValues.XKomStoreName:
                     graphicCard.Prices.XkomLowestPriceEverCrawlDate = DateTime.UtcNow;
                     graphicCard.Prices.XKomActualPrice = gpu.Price;
                     break;
@@ -86,18 +86,17 @@ namespace GPUHunt.Application.Services.CardComparer
                 Model = gpu.Model,
                 Prices = new Prices() { IsPriceEqual = false, CrawlTime = DateTime.UtcNow}
             };
-            StringBuilder sb = new(gpu.Store);
 
             graphicCard.VendorId = (int)gpu.Vendor;
             graphicCard.SubvendorId = (int)gpu.Subvendor;
 
             switch (gpu.Store)
             {
-                case "Morele":
+                case ConstValues.MoreleStoreName:
                     graphicCard.Prices.MoreleActualPrice = gpu.Price;
                     graphicCard.Prices.XKomActualPrice = equivalentGPU.Price;
                     break;
-                case "X-Kom":
+                case ConstValues.XKomStoreName:
                     graphicCard.Prices.XKomActualPrice = gpu.Price;
                     graphicCard.Prices.MoreleActualPrice = equivalentGPU.Price;
                     break;

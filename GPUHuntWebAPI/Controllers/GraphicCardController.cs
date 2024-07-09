@@ -18,11 +18,15 @@ namespace GPUHuntWebAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IGraphicCardRepository _repository;
 
+        private CancellationTokenSource cts;
+
         public GraphicCardController(IMediator mediator, IMapper mapper, IGraphicCardRepository repository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+
+            cts = new();
         }
 
         [HttpGet("all")]
@@ -42,14 +46,14 @@ namespace GPUHuntWebAPI.Controllers
         }
 
         [HttpGet("scrap")]
-        public async Task<IActionResult> Scrap()
+        public async Task<IActionResult> Scrap([FromBody]GetGraphicCardQuery? query = null)
         {
             if (!_repository.isDatabaseNotEmpty())
             {
                 return NotFound();
             }
 
-            var result = await _mediator.Send(new ScrapGraphicCardsQuery());
+            var result = await _mediator.Send(new ScrapGraphicCardsQuery(query));
             return Ok(result);
         }
 

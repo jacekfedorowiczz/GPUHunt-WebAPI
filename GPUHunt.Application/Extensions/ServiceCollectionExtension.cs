@@ -14,6 +14,7 @@ using GPUHunt.Application.Services.CardUpdater;
 using GPUHunt.Application.Services.CardValidator;
 using GPUHunt.Application.Services.StoreCrawlers;
 using GPUHunt.Application.Services.ValidatorStrategy;
+using GPUHunt.Domain.Constanst;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +30,7 @@ namespace GPUHunt.Application.Extensions
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
             var authenticationSettings = new AuthenticationSettings();
-            configuration.GetSection("Authentication").Bind(authenticationSettings);
+            configuration.GetSection(ConstValues.Authentication).Bind(authenticationSettings);
             services.AddSingleton(authenticationSettings);
 
             services.AddScoped<IStoreCrawler, MoreleCrawler>();
@@ -65,9 +66,9 @@ namespace GPUHunt.Application.Extensions
 
             services.AddAuthentication(option =>
             {
-                option.DefaultAuthenticateScheme = "Bearer";
-                option.DefaultScheme = "Bearer";
-                option.DefaultChallengeScheme = "Bearer";
+                option.DefaultAuthenticateScheme = ConstValues.Bearer;
+                option.DefaultScheme = ConstValues.Bearer;
+                option.DefaultChallengeScheme = ConstValues.Bearer;
 
             }).AddJwtBearer(cfg =>
             {

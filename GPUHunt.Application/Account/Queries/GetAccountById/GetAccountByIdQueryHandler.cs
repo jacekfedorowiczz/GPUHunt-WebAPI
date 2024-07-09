@@ -1,4 +1,5 @@
 ﻿using GPUHunt.Application.Interfaces;
+using GPUHunt.Domain.Constanst;
 using GPUHunt.Domain.Exceptions;
 using GPUHunt.Domain.Interfaces;
 using MediatR;
@@ -19,7 +20,7 @@ namespace GPUHunt.Application.Account.Queries.GetAccountById
         public Task<Domain.Entities.Account> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
         {
             var user = _userContext.GetCurrentUser();
-            if (user == null || int.Parse(user.Id) != request.Id && !(user.IsInRole("Admin") || user.IsInRole("Moderator")))
+            if (user == null || int.Parse(user.Id) != request.Id && !(user.IsInRole(ConstValues.AdminRoleName) || user.IsInRole(ConstValues.ModeratorRoleName)))
             {
                 throw new ForbidException("You have to be in role of an admin or a moderator, if you want to get information about the other user's account.");
             }

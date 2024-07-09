@@ -1,5 +1,6 @@
 ﻿using GPUHunt.Application.Interfaces;
 using GPUHunt.Application.Models;
+using GPUHunt.Domain.Constanst;
 using GPUHunt.Domain.Enums;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
@@ -17,6 +18,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
         private readonly string _gpuPriceSelector = ".gAlJbD > span.guFePW";
         private readonly string _nextSiteSelector = "a.epZxio";
         private readonly string _optionalGpuNameSelector = ".emYvVh > a > span > img";
+        private readonly string _alt = "alt";
         private readonly ICardSetter _cardSetter;
 
         protected string XKomBaseURL { get; private set; } =
@@ -46,16 +48,16 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             var document = Web.Load(XKomBaseURL);
             var urls = new List<string>() { XKomBaseURL };
 
-            if (document.QuerySelector(_nextSiteSelector).Attributes["href"].Value != null)
+            if (document.QuerySelector(_nextSiteSelector).Attributes[ConstValues.Href].Value != null)
             {
-                var nextPageUrl = "https://x-kom.pl/" + document.QuerySelector(_nextSiteSelector).Attributes["href"].Value.ToString();
+                var nextPageUrl = "https://x-kom.pl/" + document.QuerySelector(_nextSiteSelector).Attributes[ConstValues.Href].Value.ToString();
                 while (nextPageUrl != null)
                 {
                     urls.Add(nextPageUrl);
                     var newDocument = Web.Load(nextPageUrl);
                     if (newDocument.QuerySelector(_nextSiteSelector) != null)
                     {
-                        nextPageUrl = "https://x-kom.pl/" + newDocument.QuerySelector(_nextSiteSelector).Attributes["href"].Value.ToString();
+                        nextPageUrl = "https://x-kom.pl/" + newDocument.QuerySelector(_nextSiteSelector).Attributes[ConstValues.Href].Value.ToString();
                     }
                     else
                     {
@@ -93,7 +95,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
             var gpuModel = gpu.QuerySelector(_gpuNameSelector).LastChild.InnerText.ToString();
             if (string.IsNullOrEmpty(gpuModel))
             {
-                gpuModel = gpu.QuerySelector(_optionalGpuNameSelector).Attributes["alt"].Value.ToString();
+                gpuModel = gpu.QuerySelector(_optionalGpuNameSelector).Attributes[_alt].Value.ToString();
             }
 
             var gpuPrice = decimal.Parse(gpu.QuerySelector(_gpuPriceSelector).InnerText
@@ -103,8 +105,8 @@ namespace GPUHunt.Application.Services.StoreCrawlers
 
             var gpuName = sb.Append(gpuModel).Insert(0, "Karta graficzna ").ToString();
 
-            Vendors gpuVendor = _cardSetter.SetVendor(gpuName.ToLower());
-            Subvendors gpuSubvendor = _cardSetter.SetSubvendor(gpuName.ToLower());
+            Vendors gpuVendor = _cardSetter.SetVendor(gpuName);
+            Subvendors gpuSubvendor = _cardSetter.SetSubvendor(gpuName);
 
             var result = new StoreGPU
             {
@@ -113,7 +115,7 @@ namespace GPUHunt.Application.Services.StoreCrawlers
                 Subvendor = gpuSubvendor,
                 Model = gpuModel,
                 Price = gpuPrice,
-                Store = "X-Kom"
+                Store = ConstValues.XKomStoreName
             };
 
             return result;
